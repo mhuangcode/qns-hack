@@ -6,7 +6,7 @@ use tokio::{runtime::Handle, sync::RwLock};
 
 #[derive(Clone, Serialize)]
 pub struct ProcessUpdatedEvent {
-    pid: u32,
+    pid: String,
     name: String,
     cpu: f32,
 }
@@ -50,7 +50,7 @@ impl AppState {
                     match self.app_handle.emit(
                         "proccess-updated",
                         ProcessUpdatedEvent {
-                            pid: pid.as_u32(),
+                            pid: pid.to_string(),
                             name: name.to_os_string().into_string().unwrap(),
                             cpu: proc_.cpu_usage(),
                         },
