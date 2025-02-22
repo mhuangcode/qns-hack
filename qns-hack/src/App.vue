@@ -5,7 +5,8 @@ import { reactive, computed } from "vue";
 
 const pidsToProcessData = reactive<Record<string, ProccessData>>({});
 
-listen<ProccessData>("process-updated", ({ payload }) => {
+listen<ProccessData>("process-updated", (payload) => {
+console.log(JSON.stringify(payload));
   pidsToProcessData[payload.pid] = payload;
 });
 

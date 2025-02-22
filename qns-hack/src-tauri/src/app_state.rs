@@ -50,7 +50,7 @@ impl AppState {
                     let name = proc_.name();
 
                     match app_handle.emit(
-                        "proccess-updated",
+                        "process-updated",
                         ProcessUpdatedEvent {
                             pid: pid.to_string(),
                             name: name.to_os_string().into_string().unwrap(),
