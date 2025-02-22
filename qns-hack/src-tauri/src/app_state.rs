@@ -36,18 +36,20 @@ impl AppState {
         }
     }
 
-    pub fn run(&self) {
-        self.runtime.block_on(async {
+    pub async fn run(&self) {
+        let sys = self.sys.clone();
+        let app_handle = self.app_handle.clone();
+        self.runtime.spawn(async move {
             let mut interval = tokio::time::interval(std::time::Duration::from_secs(1));
             loop {
+                let mut sys = sys.write().await;
                 interval.tick().await;
-                let mut sys = self.sys.write().await;
                 sys.refresh_all();
                 let process_info = sys.processes();
                 for (pid, proc_) in process_info {
                     let name = proc_.name();
 
-                    match self.app_handle.emit(
+                    match app_handle.emit(
                         "proccess-updated",
                         ProcessUpdatedEvent {
                             pid: pid.to_string(),

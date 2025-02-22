@@ -1,5 +1,5 @@
 use app_state::AppState;
-use tauri::Manager;
+use tauri::{async_runtime, Manager};
 
 mod app_state;
 
@@ -16,7 +16,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![greet])
         .setup(|app| {
             let app_state = AppState::new(app);
-            app_state.run();
+            async_runtime::block_on(app_state.run());
             app.manage(app_state);
             Ok(())
         })
