@@ -5,8 +5,7 @@ import { reactive, computed } from "vue";
 
 const pidsToProcessData = reactive<Record<string, ProccessData>>({});
 
-listen<ProccessData>("process-updated", (payload) => {
-console.log(JSON.stringify(payload));
+listen<ProccessData>("process-updated", ({ payload }) => {
   pidsToProcessData[payload.pid] = payload;
 });
 
@@ -15,22 +14,14 @@ const processes = computed(() => Object.values(pidsToProcessData));
 
 <template>
   <main class="container py-5">
-    <b-card class="shadow-lg p-4">
-      <h1 class="text-center text-primary mb-4">
-        CPU Usage with Martin & James
-      </h1>
+    <h1 class="text-center text-primary mb-4">CPU Usage with Martin & James</h1>
 
-      <b-table
-        striped
-        hover
-        bordered
-        small
-        responsive
-        class="shadow-sm"
-        :items="processes"
-      >
-      </b-table>
-    </b-card>
+    <ul>
+      <li v-for="process in processes" :key="process.pid">
+        <strong>{{ process.name }}</strong> (PID: {{ process.pid }}) - CPU:
+        {{ process.cpu }}%
+      </li>
+    </ul>
   </main>
 </template>
 
