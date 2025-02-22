@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { invoke } from "@tauri-apps/api/core";
-import { emit, listen } from "@tauri-apps/api/event";
+import { listen } from "@tauri-apps/api/event";
+import { ProccessData } from "./models";
+import { reactive, computed } from "vue";
 
-const processes: ProcessData[] = [];
+const pidsToProcessData = reactive<Record<string, ProccessData>>({});
 
-listen<Proccess>("proccess-updated", (process: ProcessData) => {
-  processes = processes.map((p) => (p.id === process.id ? process : p));
+listen<ProccessData>("proccess-updated", ({ payload }) => {
+  pidsToProcessData[payload.pid] = payload;
 });
+
+const processes = computed(() => Object.values(pidsToProcessData));
 </script>
 
 <template>
